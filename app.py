@@ -1,15 +1,15 @@
-# from settings import *
+from settings import *
 from methods import *
 
 from fastapi import FastAPI, Response, status, Depends, Query, File, UploadFile
 from typing import Optional, List
-# from starlette.responses import FileResponse
+from starlette.responses import FileResponse
 
 import db_models
 from db_connect import engine, SessionLocal
 from sqlalchemy.orm import Session
 
-# DB
+# Database
 db_models.Base.metadata.create_all(engine)
 
 
@@ -21,7 +21,7 @@ def get_db():
         db.close()
 
 
-# END DB
+# End of Database
 
 
 app = FastAPI()
@@ -133,3 +133,24 @@ async def upload_file(
             file=file
         )
 
+
+@app.delete("/api/delete", tags=["Delete"])
+async def delete_file(
+                        response: Response,
+                        file_id: int,
+                        db: Session = Depends(get_db)
+                    ):
+    file_info_from_db = get_file_from_db(db, file_id)
+
+    if file_info_from_db:
+        # Delete file from DB
+        delete_file_from_db(db, file_info_from_db)
+
+        # Delete file from uploads
+        delete_file_from_uploads(file_info_from_db.name)
+
+        response.status_code = status.HTTP_200_OK
+        return {'msg': f'File {file_info_from_db.name} deleted'}
+    else:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {'msg': f'File does not exist'}

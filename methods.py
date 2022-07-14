@@ -22,14 +22,6 @@ def get_files_from_db_limit_offset(db, query, limit: int = None, offset: int = N
     return query
 
 
-# Delete file from uploads folder
-def delete_file_from_uploads(file_name):
-    try:
-        os.remove(UPLOADED_FILES_PATH + file_name)
-    except Exception as e:
-        print(e)
-
-
 # Save file to uploads folder ('uploaded_files/')
 async def save_file_to_uploads(file, filename):
     with open(f'{UPLOADED_FILES_PATH}{filename}', "wb") as uploaded_file:
@@ -87,3 +79,18 @@ def update_file_in_db(db, **kwargs):
     db.commit()
     db.refresh(update_file)
     return update_file
+
+
+# Delete file from DB
+def delete_file_from_db(db, file_info_from_db):
+    db.delete(file_info_from_db)
+    db.commit()
+
+
+# Delete file from uploads folder
+def delete_file_from_uploads(file_name):
+    try:
+        os.remove(UPLOADED_FILES_PATH + file_name)
+    except Exception as e:
+        print(e)
+

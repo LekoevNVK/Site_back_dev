@@ -102,6 +102,7 @@ async def upload_file(
         file_id: int,
         name: Optional[str] = None,
         tag: Optional[str] = None,
+        text: Optional[str] = None,
         file: UploadFile = File(...),
         db: Session = Depends(get_db)
 ):
@@ -125,6 +126,7 @@ async def upload_file(
             file_id=file_id,
             full_name=full_name,
             tag=tag,
+            text=text,  # for test (delete later)
             file_size=file_size,
             file=file
         )
@@ -140,8 +142,9 @@ async def upload_file(
             file_id=file_id,
             full_name=full_name,
             tag=tag,
+            text=text,  # for test (delete later)
             file_size=file_size,
-            file=file
+            file=file,
         )
 
 
@@ -150,7 +153,7 @@ async def delete_file(
                         response: Response,
                         file_id: int,
                         db: Session = Depends(get_db)
-                    ):
+                     ):
     file_info_from_db = get_file_from_db(db, file_id)
 
     if file_info_from_db:

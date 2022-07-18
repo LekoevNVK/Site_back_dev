@@ -13,3 +13,4 @@ class Image(Base):
     size = Column(Integer)
     mime_type = Column(String)
     modification_time = Column(String)
+    text = Column(String)

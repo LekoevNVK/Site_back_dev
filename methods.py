@@ -10,7 +10,7 @@ def get_file_from_db(db, file_id):
     return db.query(db_models.Image).filter(db_models.Image.file_id == file_id).first()
 
 
-# Limit and offset
+# Limit and offset (history from id ... to id ...)
 def get_files_from_db_limit_offset(db, query, limit: int = None, offset: int = None):
     if limit and not offset:
         query = query[:limit]
@@ -60,6 +60,7 @@ def add_file_to_db(db, **kwargs):
         tag=kwargs['tag'],
         size=kwargs['file_size'],
         mime_type=kwargs['file'].content_type,
+        text=kwargs['text'],
         modification_time=datetime.now()
     )
     db.add(new_file)
@@ -76,6 +77,7 @@ def update_file_in_db(db, **kwargs):
     update_file.size = kwargs['file_size']
     update_file.mime_type = kwargs['file'].content_type
     update_file.modification_time = datetime.now()
+    update_file.text = kwargs['text']
     db.commit()
     db.refresh(update_file)
     return update_file

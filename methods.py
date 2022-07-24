@@ -83,6 +83,15 @@ def update_file_in_db(db, **kwargs):
     return update_file
 
 
+# Add text to db
+def update_file_text_in_db(db, **kwargs):
+    update_file = db.query(db_models.Image).filter(db_models.Image.file_id == kwargs['file_id']).first()
+    update_file.text = kwargs['text']
+    db.commit()
+    db.refresh(update_file)
+    return update_file
+
+
 # Delete file from DB
 def delete_file_from_db(db, file_info_from_db):
     db.delete(file_info_from_db)

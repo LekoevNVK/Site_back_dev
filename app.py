@@ -3,6 +3,7 @@ from methods import *
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Response, status, Depends, Query, File, UploadFile
 from typing import Optional, List
+from model1 import predict
 from starlette.responses import FileResponse
 
 import db_models
@@ -126,7 +127,7 @@ async def upload_file(
             file_id=file_id,
             full_name=full_name,
             tag=tag,
-            text=text,  # for test (delete later)
+            text=text,
             file_size=file_size,
             file=file
         )
@@ -142,10 +143,22 @@ async def upload_file(
             file_id=file_id,
             full_name=full_name,
             tag=tag,
-            text=text,  # for test (delete later)
+            text=text,
             file_size=file_size,
             file=file,
         )
+
+
+@app.post('/predict', tags=["Make predict"])
+async def make_predict(
+        file_id,
+        db: Session = Depends(get_db)
+):
+    file_info_from_db = get_file_from_db(db, file_id)
+    return update_file_text_in_db(db,
+                                  file_id=file_id,
+                                  text=predict(fr'uploaded_files\{file_info_from_db.name}')
+                                  )
 
 
 @app.delete("/api/delete", tags=["Delete"])

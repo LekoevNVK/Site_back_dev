@@ -1,4 +1,3 @@
-from settings import *
 from methods import *
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Response, status, Depends, Query, File, UploadFile
@@ -134,6 +133,7 @@ async def upload_file(
 
     # Update in DB
     if file_info_from_db:
+        response.status_code = status.HTTP_201_CREATED
         if file_info_from_db.name == full_name:
             return update_file_in_db(
                 db,
@@ -155,7 +155,6 @@ async def upload_file(
                 file_size=file_size,
                 file=file
             )
-        response.status_code = status.HTTP_201_CREATED
 
 
 @app.post('/predict', tags=["Make predict"])
@@ -166,16 +165,16 @@ async def make_predict(
     file_info_from_db = get_file_from_db(db, file_id)
     return update_file_text_in_db(db,
                                   file_id=file_id,
-                                  text=predict(fr'uploaded_files\{file_info_from_db.name}')
+                                  text=predict(UPLOADED_FILES_PATH + file_info_from_db.name)
                                   )
 
 
 @app.delete("/api/delete", tags=["Delete"])
 async def delete_file(
-                        response: Response,
-                        file_id: int,
-                        db: Session = Depends(get_db)
-                     ):
+        response: Response,
+        file_id: int,
+        db: Session = Depends(get_db)
+):
     file_info_from_db = get_file_from_db(db, file_id)
 
     if file_info_from_db:
@@ -190,3 +189,22 @@ async def delete_file(
     else:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {'msg': f'File does not exist'}
+
+
+@app.get('/api/photo', tags=['Get Photo'])
+async def get_photo(
+        response: Response,
+        file_id: int,
+        db: Session = Depends(get_db)
+):
+    file_info_from_db = get_file_from_db(db, file_id)
+
+    if file_info_from_db:
+        photo_from_db = FileResponse(UPLOADED_FILES_PATH + file_info_from_db.name,
+                                     media_type=file_info_from_db.mime_type,
+                                     filename=file_info_from_db.name)
+        response.status_code = status.HTTP_200_OK
+        return photo_from_db
+    else:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {'msg': 'File not found'}

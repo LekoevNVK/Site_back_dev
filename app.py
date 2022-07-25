@@ -134,19 +134,28 @@ async def upload_file(
 
     # Update in DB
     if file_info_from_db:
-        # Delete file from uploads
-        delete_file_from_uploads(file_info_from_db.name)
-
+        if file_info_from_db.name == full_name:
+            return update_file_in_db(
+                db,
+                file_id=file_id,
+                full_name=full_name,
+                tag=tag,
+                text=text,
+                file_size=file_size,
+                file=file
+            )
+        else:
+            delete_file_from_uploads(file_info_from_db.name)
+            return update_file_in_db(
+                db,
+                file_id=file_id,
+                full_name=full_name,
+                tag=tag,
+                text=text,
+                file_size=file_size,
+                file=file
+            )
         response.status_code = status.HTTP_201_CREATED
-        return update_file_in_db(
-            db,
-            file_id=file_id,
-            full_name=full_name,
-            tag=tag,
-            text=text,
-            file_size=file_size,
-            file=file,
-        )
 
 
 @app.post('/predict', tags=["Make predict"])

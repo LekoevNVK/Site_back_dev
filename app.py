@@ -157,7 +157,7 @@ async def upload_file(
             )
 
 
-@app.post('/predict', tags=["Make predict"])
+@app.post('/api/predict', tags=["Make predict"])
 async def make_predict(
         file_id,
         db: Session = Depends(get_db)

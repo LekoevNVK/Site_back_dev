@@ -2,7 +2,7 @@ from methods import *
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Response, status, Depends, Query, File, UploadFile
 from typing import Optional, List
-from model1 import predict
+from model import OCR
 from starlette.responses import FileResponse
 
 import db_models
@@ -165,7 +165,7 @@ async def make_predict(
     file_info_from_db = get_file_from_db(db, file_id)
     return update_file_text_in_db(db,
                                   file_id=file_id,
-                                  text=predict(UPLOADED_FILES_PATH + file_info_from_db.name)
+                                  text=OCR.predict(fr'\uploaded_files\{file_info_from_db.name}')
                                   )
 
 

@@ -4,7 +4,8 @@ from fastapi import FastAPI, Response, status, Depends, Query, File, UploadFile
 from typing import Optional, List
 from model import OCR
 from starlette.responses import FileResponse
-
+import cv2
+import os
 import db_models
 from db_connect import engine, SessionLocal
 from sqlalchemy.orm import Session
@@ -208,3 +209,26 @@ async def get_photo(
     else:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {'msg': 'File not found'}
+
+
+@app.get('/api/photos', tags=['Get Photos'])
+async def get_photo(
+        response: Response,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
+        db: Session = Depends(get_db)
+):
+    photos = []
+    for file_id in range(limit, offset + 1):
+        file_info_from_db = get_file_from_db(db, file_id)
+
+        if file_info_from_db:
+            photo_from_db = FileResponse(UPLOADED_FILES_PATH + file_info_from_db.name,
+                                         media_type=file_info_from_db.mime_type,
+                                         filename=file_info_from_db.name)
+            response.status_code = status.HTTP_200_OK
+            photos.append(photo_from_db)
+        else:
+            response.status_code = status.HTTP_404_NOT_FOUND
+            return {'msg': 'File not found'}
+    return photos

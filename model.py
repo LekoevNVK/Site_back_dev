@@ -1,7 +1,6 @@
 from scr.WordSegmentation import wordSegmentation, prepareImg
 import os
 from PIL import Image
-import pytesseract
 import cv2
 from scr.LinesSegmentation import lineSegmentation
 import matplotlib.pyplot as plt

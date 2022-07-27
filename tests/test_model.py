@@ -1,4 +1,4 @@
-from model1 import predict
+from model import OCR
 import os
 
-print(predict(os.curdir + f'\text\txt8.png'))
+print(OCR.predict(os.curdir + f'\text\txt8.png'))

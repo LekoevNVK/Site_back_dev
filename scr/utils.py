@@ -250,7 +250,7 @@ def prediction(model, test_dir, char2idx, idx2char):
         value : dict with keys ['p_value', 'predicted_label']
     """
     preds = {}
-    os.makedirs('/output', exist_ok=True)
+    os.makedirs('output', exist_ok=True)
     model.eval()
 
     with torch.no_grad():

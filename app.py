@@ -166,7 +166,7 @@ async def make_predict(
     file_info_from_db = get_file_from_db(db, file_id)
     return update_file_text_in_db(db,
                                   file_id=file_id,
-                                  text=OCR.predict(f'/home/api_new/Site_back_dev/uploaded_files/{file_info_from_db.name}')
+                                  text=OCR.predict(f'/uploaded_files/{file_info_from_db.name}')
                                   )
 
 
@@ -201,7 +201,7 @@ async def get_photo(
     file_info_from_db = get_file_from_db(db, file_id)
 
     if file_info_from_db:
-        photo_from_db = FileResponse(f'/home/api_new/Site_back_dev/uploaded_files/{file_info_from_db.name}',
+        photo_from_db = FileResponse(f'uploaded_files/{file_info_from_db.name}',
                                      media_type=file_info_from_db.mime_type,
                                      filename=file_info_from_db.name)
         response.status_code = status.HTTP_200_OK
@@ -223,7 +223,7 @@ async def get_photo(
         file_info_from_db = get_file_from_db(db, file_id)
 
         if file_info_from_db:
-            photo_from_db = FileResponse(f'/home/api_new/Site_back_dev/uploaded_files/{file_info_from_db.name}',
+            photo_from_db = FileResponse(f'uploaded_files/{file_info_from_db.name}',
                                          media_type=file_info_from_db.mime_type,
                                          filename=file_info_from_db.name)
             response.status_code = status.HTTP_200_OK

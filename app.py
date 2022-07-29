@@ -177,7 +177,7 @@ async def delete_file(
         id: int,
         db: Session = Depends(get_db)
 ):
-    file_info_from_db = get_file_from_db(db, id)
+    file_info_from_db = get_file_from_db_id(db, id)
 
     if file_info_from_db:
         # Delete file from DB

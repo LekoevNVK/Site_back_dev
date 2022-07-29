@@ -220,8 +220,9 @@ async def get_photos(
         db: Session = Depends(get_db)
 ):
     photos = []
+
     for id in range(start, start + count + 1):
-        file_info_from_db_id = get_file_from_db(db, id)
+        file_info_from_db_id = get_file_from_db_id(db, id)
 
         if file_info_from_db_id:
             photo_from_db = FileResponse(f'uploaded_files/{file_info_from_db_id.name}',

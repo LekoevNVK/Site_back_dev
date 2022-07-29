@@ -215,12 +215,12 @@ async def get_photo(
 @app.get('/api/photos', tags=['Get Photos'])
 async def get_photos(
         response: Response,
-        limit: Optional[int] = None,
-        offset: Optional[int] = None,
+        start: Optional[int] = None,
+        count: Optional[int] = None,
         db: Session = Depends(get_db)
 ):
     photos = []
-    for id in range(limit, offset + 1):
+    for id in range(start, start + count + 1):
         file_info_from_db_id = get_file_from_db(db, id)
 
         if file_info_from_db_id:

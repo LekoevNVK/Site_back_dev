@@ -5,9 +5,14 @@ import db_models
 from settings import *
 
 
-# Get file info from DB
+# Get file info from DB by file_id
 def get_file_from_db(db, file_id):
     return db.query(db_models.Image).filter(db_models.Image.file_id == file_id).first()
+
+
+# Get file info from DB by id
+def get_file_from_db_id(db, id):
+    return db.query(db_models.Image).filter(db_models.Image.id == id).first()
 
 
 # Limit and offset (history from id ... to id ...)

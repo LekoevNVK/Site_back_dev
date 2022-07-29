@@ -174,10 +174,10 @@ async def make_predict(
 @app.delete("/api/delete", tags=["Delete"])
 async def delete_file(
         response: Response,
-        file_id: int,
+        id: int,
         db: Session = Depends(get_db)
 ):
-    file_info_from_db = get_file_from_db(db, file_id)
+    file_info_from_db = get_file_from_db(db, id)
 
     if file_info_from_db:
         # Delete file from DB
@@ -213,20 +213,20 @@ async def get_photo(
 
 
 @app.get('/api/photos', tags=['Get Photos'])
-async def get_photo(
+async def get_photos(
         response: Response,
         limit: Optional[int] = None,
         offset: Optional[int] = None,
         db: Session = Depends(get_db)
 ):
     photos = []
-    for file_id in range(limit, offset + 1):
-        file_info_from_db = get_file_from_db(db, file_id)
+    for id in range(limit, offset + 1):
+        file_info_from_db_id = get_file_from_db(db, id)
 
-        if file_info_from_db:
-            photo_from_db = FileResponse(f'uploaded_files/{file_info_from_db.name}',
-                                         media_type=file_info_from_db.mime_type,
-                                         filename=file_info_from_db.name)
+        if file_info_from_db_id:
+            photo_from_db = FileResponse(f'uploaded_files/{file_info_from_db_id.name}',
+                                         media_type=file_info_from_db_id.mime_type,
+                                         filename=file_info_from_db_id.name)
             response.status_code = status.HTTP_200_OK
             photos.append(photo_from_db)
         else:

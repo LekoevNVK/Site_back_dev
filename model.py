@@ -28,9 +28,9 @@ class OCR:
         model.load_state_dict(torch.load("checkpoint_131.pt", map_location='cpu'))
         img = cv2.imread(os.curdir + filePath)
         if wordIS == 'слово':
-            plt.imsave(os.curdir + f'\word\txt0.png', img)
+            plt.imsave(os.curdir + f'/word/txt0.png', img)
             prdct = prediction(model, Path(Path.cwd(), 'word'), char2idx, idx2char)
-            files = glob.glob('word/')
+            files = glob.glob('word/*')
             for f in files: os.remove(f)
             return ' '.join(prdct.values())
         tmp_line = lineSegmentation(img)
@@ -39,7 +39,7 @@ class OCR:
             imgLine = prepareImg(line, 50)
             tmp_words = wordSegmentation(imgLine, kernelSize=25, sigma=11, theta=7, minArea=200)
             for word in tmp_words:
-                plt.imsave(os.curdir + f'\word\txt{i}.png', word[1])
+                plt.imsave(os.curdir + f'/word/txt{i}.png', word[1])
                 i += 1
         prdct = prediction(model, Path(Path.cwd(), 'word'), char2idx, idx2char)
         files = glob.glob('word/')

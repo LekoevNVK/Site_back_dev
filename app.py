@@ -164,9 +164,10 @@ async def make_predict(
         db: Session = Depends(get_db)
 ):
     file_info_from_db = get_file_from_db(db, file_id)
+    text = file_info_from_db.text
     return update_file_text_in_db(db,
                                   file_id=file_id,
-                                  text=OCR.predict(f'/uploaded_files/{file_info_from_db.name}')
+                                  text=OCR.predict(f'/uploaded_files/{file_info_from_db.name}', text)
                                   )
 
 
